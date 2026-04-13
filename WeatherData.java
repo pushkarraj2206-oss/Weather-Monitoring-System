@@ -2,13 +2,13 @@ class WeatherData {
     private double temperature;
     private double humidity;
 
-    // Constructor
+    
     public WeatherData(double temperature, double humidity) {
         this.temperature = temperature;
         this.humidity = humidity;
     }
 
-    // Method to check alerts
+    
     public String checkAlert() {
         String alert = "";
 
@@ -29,7 +29,7 @@ class WeatherData {
         return alert;
     }
 
-    // Method to display report
+    
     public void displayReport() {
         System.out.println("\n--- Weather Report ---");
         System.out.println("Temperature: " + temperature + "°C");
