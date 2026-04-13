@@ -10,10 +10,10 @@ public class WeatherApp {
         System.out.print("Enter Humidity: ");
         double hum = sc.nextDouble();
 
-        // Create object
+        
         WeatherData wd = new WeatherData(temp, hum);
 
-        // Display report
+        
         wd.displayReport();
 
         sc.close();
