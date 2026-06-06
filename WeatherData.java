@@ -1,92 +1,115 @@
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.Scanner;
 
-public class WeatherData {
+abstract class Sensor {
+
+    protected String location;
+
+    public Sensor(String location) {
+        this.location = location;
+    }
+
+    public void showLocation() {
+        System.out.println("Location    : " + location);
+    }
+
+    abstract void displayReport();
+}
+
+class WeatherData extends Sensor {
 
     private double temperature;
     private double humidity;
 
-    public WeatherData(double temperature, double humidity) {
+    static int totalReports = 0;
+
+    public WeatherData(String location, double temperature, double humidity) {
+        super(location);
         this.temperature = temperature;
         this.humidity = humidity;
+        totalReports++;
     }
 
     public double getTemperature() {
         return temperature;
     }
 
+    public void setTemperature(double temperature) {
+        this.temperature = temperature;
+    }
+
     public double getHumidity() {
         return humidity;
     }
 
-    public String checkAlert() {
-        return checkAlert(40, 10, 80);
-    }
-
-    public String checkAlert(double highTemp,
-                             double lowTemp,
-                             double highHumidity) {
-
-        StringBuilder alert = new StringBuilder();
-
-        if (temperature > highTemp)
-            alert.append("High Temperature Alert\n");
-
-        if (temperature < lowTemp)
-            alert.append("Low Temperature Alert\n");
-
-        if (humidity > highHumidity)
-            alert.append("High Humidity Alert\n");
-
-        if (alert.length() == 0)
-            alert.append("Weather is Normal");
-
-        return alert.toString();
+    public void setHumidity(double humidity) {
+        this.humidity = humidity;
     }
 
     public String getWeatherCondition() {
 
         if (temperature > 35)
             return "Hot";
-
         else if (temperature < 15)
             return "Cold";
-
         else
             return "Moderate";
     }
 
-    public void displayReport() {
+    public String checkAlert() {
 
-        System.out.println("\n========== WEATHER REPORT ==========");
-        System.out.println("Temperature      : " + temperature + " °C");
-        System.out.println("Humidity         : " + humidity + " %");
-        System.out.println("Condition        : " + getWeatherCondition());
-        System.out.println("Alert            : " + checkAlert());
-        System.out.println("====================================");
+        if (temperature > 40)
+            return "High Temperature Alert";
+        else if (humidity > 80)
+            return "High Humidity Alert";
+        else
+            return "Weather is Normal";
     }
 
-    public void saveReport() {
+    @Override
+    public void displayReport() {
+
+        System.out.println("\n===== WEATHER REPORT =====");
+        showLocation();
+        System.out.println("Temperature : " + temperature + " °C");
+        System.out.println("Humidity    : " + humidity + " %");
+        System.out.println("Condition   : " + getWeatherCondition());
+        System.out.println("Alert       : " + checkAlert());
+        System.out.println("Total Reports Generated : " + totalReports);
+        System.out.println("==========================");
+    }
+}
+
+public class WeatherMonitoringSystem {
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
 
         try {
 
-            FileWriter writer =
-                    new FileWriter("WeatherReport.txt", true);
+            System.out.print("Enter Location: ");
+            String location = sc.nextLine();
 
-            writer.write("\n========== WEATHER REPORT ==========\n");
-            writer.write("Temperature : " + temperature + " °C\n");
-            writer.write("Humidity    : " + humidity + " %\n");
-            writer.write("Condition   : " + getWeatherCondition() + "\n");
-            writer.write("Alert       : " + checkAlert() + "\n");
-            writer.write("====================================\n");
+            System.out.print("Enter Temperature: ");
+            double temperature = sc.nextDouble();
 
-            writer.close();
+            System.out.print("Enter Humidity: ");
+            double humidity = sc.nextDouble();
 
-            System.out.println("Report saved successfully!");
+            Sensor sensor = new WeatherData(
+                    location,
+                    temperature,
+                    humidity
+            );
 
-        } catch (IOException e) {
+            sensor.displayReport();
 
-            System.out.println("Error while saving file.");
+        } catch (Exception e) {
+
+            System.out.println("Invalid Input Entered.");
+
         }
+
+        sc.close();
     }
 }
